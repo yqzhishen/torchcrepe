@@ -2,19 +2,22 @@ import torch
 
 import torchcrepe
 
+
 device = 'cpu'
-crepe = torchcrepe.Crepe()
-crepe.load_state_dict(torch.load(f'torchcrepe/assets/full.pth', map_location=device))
+model = 'full'
+wrapper = torchcrepe.CrepeWrapper(model=model)
+wrapper.crepe.load_state_dict(torch.load(f'torchcrepe/assets/{model}.pth', map_location=device))
 with torch.no_grad():
-    frames = torch.rand((1024, 1024)).to(device)
+    frames = torch.rand((2, 1024)).to(device)
     print(frames.shape)
     torch.onnx.export(
-        crepe,
+        wrapper,
         (
             frames,
         ),
-        'crepe_full.onnx',
+        f'crepe_{model}_wrapped.onnx',
         input_names=['frames'],
+        output_names=['probabilities'],
         opset_version=10,
         dynamic_axes={
             'frames': {

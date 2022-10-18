@@ -18,10 +18,10 @@ fmax = 1100
 model = 'full'
 
 # Choose a device to use for inference
-device = 'cuda:0'
+device = 'cpu'
 
 # Pick a batch size that doesn't cause memory errors on your gpu
-batch_size = 1024
+batch_size = 512
 
 # Compute pitch using first gpu
 pitch = torchcrepe.predict(audio,

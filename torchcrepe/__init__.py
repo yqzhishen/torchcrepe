@@ -1,6 +1,6 @@
 from . import decode
 from .core import *
-from .model import Crepe
+from .model import Crepe, CrepeWrapper
 from . import convert
 from . import filter
 from . import load

@@ -132,3 +132,20 @@ class Crepe(torch.nn.Module):
         x = F.relu(x)
         x = batch_norm(x)
         return F.max_pool2d(x, (2, 1), (2, 1))
+
+
+class CrepeWrapper(torch.nn.Module):
+    def __init__(self, model='full'):
+        super().__init__()
+        self.crepe = Crepe(model=model)
+
+    def forward(self, x):
+        # Standardize each window
+        x -= x.mean(dim=1, keepdim=True)
+        var = torch.mean(torch.square(x), dim=1, keepdim=True) * (torchcrepe.WINDOW_SIZE / (torchcrepe.WINDOW_SIZE - 1))
+        x /= torch.max(
+            torch.tensor(1e-10, device=x.device),
+            torch.sqrt(var))
+
+        # Forward pass CREPE model
+        return self.crepe(x)

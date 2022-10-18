@@ -10,7 +10,7 @@ import torchcrepe
 frames = np.load('test.npy')
 
 
-session = ort.InferenceSession(r'crepe_full.onnx', providers=['CUDAExecutionProvider'], provider_options=[{'cudnn_conv_algo_search': 'DEFAULT'}])
+session = ort.InferenceSession(r'crepe_full.onnx', providers=['DmlExecutionProvider'])
 start = time.time()
 ort_out = session.run(None, {'frames': frames})
 options = ort.RunOptions()
